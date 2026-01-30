@@ -105,4 +105,52 @@ class ExportService
             
         return $pdf->download('laporan_ppdb_' . date('Y-m-d_H-i') . '.pdf');
     }
+
+    /**
+     * Download applicants data as CSV.
+     */
+    public function downloadCSV(array $filters)
+    {
+        $query = $this->buildQuery($filters);
+        
+        return Excel::download(new class($query) implements FromCollection, WithHeadings, WithMapping {
+            protected $query;
+
+            public function __construct($query)
+            {
+                $this->query = $query;
+            }
+
+            public function collection()
+            {
+                return $this->query->get();
+            }
+
+            public function headings(): array
+            {
+                return [
+                    'No. Pendaftaran',
+                    'NISN',
+                    'Nama Lengkap',
+                    'Jalur PPDB',
+                    'Status',
+                    'Tanggal Daftar',
+                    'Total Skor',
+                ];
+            }
+
+            public function map($applicant): array
+            {
+                return [
+                    $applicant->registration_number,
+                    $applicant->nisn,
+                    $applicant->full_name,
+                    $applicant->pathway->name ?? '-',
+                    ucfirst($applicant->status),
+                    $applicant->created_at->format('Y-m-d H:i:s'),
+                    $applicant->total_score ?? '0',
+                ];
+            }
+        }, 'laporan_ppdb_' . date('Y-m-d_H-i') . '.csv', \Maatwebsite\Excel\Excel::CSV);
+    }
 }

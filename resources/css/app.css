@@ -42,27 +42,27 @@ body {
 
 /* Primary Button - Gradient & Shadow */
 .btn-primary {
-    @apply bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 focus:ring-primary-500 shadow-md hover:shadow-lg border-transparent;
+    @apply bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 focus:ring-emerald-500 shadow-md hover:shadow-lg hover:shadow-emerald-500/25 border-transparent inline-flex items-center justify-center px-6 py-3.5 font-semibold text-sm rounded-xl transition-all duration-200 active:scale-[0.98];
 }
 
 /* Secondary Button - Clean Gray */
 .btn-secondary {
-    @apply bg-white text-gray-700 border-gray-300 hover:bg-gray-50 focus:ring-gray-500 hover:text-gray-900;
+    @apply inline-flex items-center justify-center px-6 py-3.5 bg-white border border-slate-200 text-slate-600 font-semibold text-sm rounded-xl transition-all duration-200 hover:bg-slate-50 hover:border-slate-300;
 }
 
 /* Danger Button */
 .btn-danger {
-    @apply bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 focus:ring-red-500 shadow-md hover:shadow-lg border-transparent;
+    @apply bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 focus:ring-red-500 shadow-md hover:shadow-lg border-transparent inline-flex items-center justify-center px-6 py-3.5 font-semibold text-sm rounded-xl;
 }
 
 /* Success Button */
 .btn-success {
-    @apply bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 focus:ring-green-500 shadow-md hover:shadow-lg border-transparent;
+    @apply bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 focus:ring-green-500 shadow-md hover:shadow-lg border-transparent inline-flex items-center justify-center px-6 py-3.5 font-semibold text-sm rounded-xl;
 }
 
 /* Warning Button */
 .btn-warning {
-    @apply bg-gradient-to-r from-yellow-500 to-yellow-600 text-white hover:from-yellow-600 hover:to-yellow-700 focus:ring-yellow-500 shadow-md hover:shadow-lg border-transparent;
+    @apply bg-gradient-to-r from-yellow-500 to-yellow-600 text-white hover:from-yellow-600 hover:to-yellow-700 focus:ring-yellow-500 shadow-md hover:shadow-lg border-transparent inline-flex items-center justify-center px-6 py-3.5 font-semibold text-sm rounded-xl;
 }
 
 /* Small Button */
@@ -77,7 +77,7 @@ body {
 
 /* Form inputs */
 .form-input {
-    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none;
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none;
 }
 
 .form-label {
@@ -86,6 +86,142 @@ body {
 
 .form-error {
     @apply text-red-600 text-sm mt-1;
+}
+
+/* ============================================
+   MODERN MINIMALIST FORM DESIGN SYSTEM (MIGRATED)
+   ============================================ */
+
+/* Form Group */
+.form-wrapper .form-group {
+    @apply mb-6;
+}
+
+/* Labels */
+.form-wrapper .input-label {
+    @apply block text-sm font-semibold text-slate-700 mb-2;
+}
+
+/* Input Fields */
+.form-wrapper input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), 
+.form-wrapper select, 
+.form-wrapper textarea {
+    @apply w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-900 text-base transition-all duration-200 placeholder:text-slate-400 outline-none;
+}
+
+.form-wrapper input:hover, 
+.form-wrapper select:hover, 
+.form-wrapper textarea:hover {
+    @apply border-slate-300 bg-slate-100/50;
+}
+
+.form-wrapper input:focus, 
+.form-wrapper select:focus, 
+.form-wrapper textarea:focus {
+    @apply bg-white border-emerald-500 ring-4 ring-emerald-500/10;
+}
+
+/* Disabled/Readonly Inputs */
+.form-wrapper input:disabled, 
+.form-wrapper select:disabled, 
+.form-wrapper input[readonly] {
+    @apply bg-slate-100 text-slate-500 border-slate-200 cursor-not-allowed;
+}
+
+/* Select Dropdown */
+.form-wrapper select {
+    @apply appearance-none cursor-pointer pr-12;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-position: right 1rem center;
+    background-repeat: no-repeat;
+    background-size: 1.25rem;
+}
+
+/* Textarea */
+.form-wrapper textarea {
+    @apply resize-none;
+}
+
+/* Radio/Checkbox Card Options */
+.form-wrapper .option-card {
+    @apply relative flex items-center gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl cursor-pointer transition-all duration-200;
+}
+
+.form-wrapper .option-card:hover {
+    @apply border-slate-300 bg-slate-100/50;
+}
+
+.form-wrapper input:checked + .option-card {
+    @apply border-emerald-500 bg-emerald-50;
+}
+
+.form-wrapper .option-card .option-dot {
+    @apply w-5 h-5 rounded-full border-2 border-slate-300 bg-white flex items-center justify-center transition-all;
+}
+
+.form-wrapper input:checked + .option-card .option-dot {
+    @apply border-emerald-500 bg-emerald-500;
+}
+
+.form-wrapper .option-card .option-dot::after {
+    content: '';
+    @apply w-2 h-2 rounded-full bg-white scale-0 transition-transform;
+}
+
+.form-wrapper input:checked + .option-card .option-dot::after {
+    @apply scale-100;
+}
+
+/* Legacy card-radio support */
+.form-wrapper .card-radio {
+    @apply relative flex items-center justify-center gap-2 p-3 sm:p-4 bg-slate-50 border-2 border-slate-200 rounded-xl cursor-pointer transition-all duration-200 text-slate-600 font-semibold text-xs sm:text-sm text-center h-full;
+}
+
+.form-wrapper .card-radio:hover {
+    @apply border-emerald-400 bg-emerald-50/50;
+}
+
+.form-wrapper input:checked + .card-radio {
+    @apply border-emerald-500 bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-500/20;
+}
+
+/* Section Header */
+.form-wrapper .section-header {
+    @apply flex items-center gap-3 mb-6 pb-4 border-b border-slate-100;
+}
+
+.form-wrapper .section-number {
+    @apply w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-sm font-bold;
+}
+
+.form-wrapper .section-title {
+    @apply text-base font-bold text-slate-900;
+}
+
+/* Info Box */
+.form-wrapper .info-box {
+    @apply p-4 bg-slate-50 border border-slate-200 rounded-xl;
+}
+
+.form-wrapper .info-box.info-success {
+    @apply bg-emerald-50 border-emerald-200;
+}
+
+.form-wrapper .info-box.info-warning {
+    @apply bg-amber-50 border-amber-200;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+    .form-wrapper input,
+    .form-wrapper select,
+    .form-wrapper textarea {
+        @apply text-sm py-3;
+    }
+    
+    .form-wrapper .btn-action {
+        @apply w-full justify-center py-4 text-base;
+    }
 }
 
 /* Table */

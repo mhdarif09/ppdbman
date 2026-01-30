@@ -80,9 +80,32 @@ class VerificationController extends Controller
         // Policy check or simple check - verificator can view any applicant usually
         // but verify actions should be restricted if already verified.
         
-        $applicant->load(['pathway', 'user', 'verifier']);
+        $applicant->load(['pathway', 'user', 'verifier', 'parents', 'education', 'grades', 'hobby', 'development']);
 
         return view('verifikator.verification.show', compact('applicant'));
+    }
+
+    /**
+     * Show QR scanner page.
+     */
+    public function scan()
+    {
+        return view('verifikator.verification.scan');
+    }
+
+    /**
+     * Verify applicant by token (from QR code).
+     */
+    public function verifyByToken($token)
+    {
+        $applicant = Applicant::where('verification_token', $token)->first();
+
+        if (!$applicant) {
+            return redirect()->route('verifikator.dashboard')
+                ->with('error', 'Token verifikasi tidak valid.');
+        }
+
+        return redirect()->route('verifikator.verification.show', $applicant->id);
     }
 
     /**

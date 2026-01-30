@@ -90,7 +90,7 @@
                                 {{ $applicant->full_name }}
                             </td>
                             <td>
-                                <span class="badge badge-info">{{ $applicant->pathway->name }}</span>
+                                <span class="badge badge-info">{{ $applicant->pathway->name ?? '-' }}</span>
                             </td>
                             <td class="text-right">
                                 <a href="{{ route('verifikator.verification.show', $applicant) }}" class="btn btn-sm btn-primary">

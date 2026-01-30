@@ -21,9 +21,7 @@
             <!-- Logo -->
             <div class="h-16 flex items-center justify-between px-6 border-b border-gray-200">
                 <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold">
-                        P
-                    </div>
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8 w-8">
                     <span class="font-semibold text-gray-900">PPDB Admin</span>
                 </div>
                 <button @click="sidebarOpen = false" class="lg:hidden text-gray-500">

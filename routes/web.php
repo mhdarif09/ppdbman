@@ -23,6 +23,35 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+// Central Dashboard Redirect
+Route::get('/dashboard', [App\Http\Controllers\DashboardRedirectController::class, 'index'])->name('dashboard')->middleware('auth');
+Route::get('/home', [App\Http\Controllers\DashboardRedirectController::class, 'index'])->name('home')->middleware('auth');
+
+// Registration routes
+Route::get('/register', [App\Http\Controllers\Auth\RegistrationController::class, 'index'])->name('register');
+Route::post('/register', [App\Http\Controllers\Auth\RegistrationController::class, 'store'])->name('register.store');
+
+// Applicant Dashboard
+Route::middleware(['auth', 'role:pendaftar'])->prefix('pendaftar')->name('applicant.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Applicant\DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard', [App\Http\Controllers\Applicant\DashboardController::class, 'update'])->name('dashboard.update');
+    Route::post('/select-pathway', [App\Http\Controllers\Applicant\DashboardController::class, 'selectPathway'])->name('select-pathway');
+    
+    // Biodata
+    Route::get('/biodata', [App\Http\Controllers\Applicant\BiodataController::class, 'edit'])->name('biodata.edit');
+    Route::post('/biodata', [App\Http\Controllers\Applicant\BiodataController::class, 'update'])->name('biodata.update');
+    
+    // Multi-step Registration
+    Route::get('/registration/step/{step}', [App\Http\Controllers\Applicant\RegistrationStepController::class, 'show'])->name('registration.step');
+    Route::post('/registration/step/{step}', [App\Http\Controllers\Applicant\RegistrationStepController::class, 'save'])->name('registration.save');
+    Route::post('/registration/submit', [App\Http\Controllers\Applicant\RegistrationStepController::class, 'submit'])->name('registration.submit');
+    
+    // Registration Card
+    Route::get('/registration-card', [App\Http\Controllers\Applicant\RegistrationCardController::class, 'show'])->name('registration-card.show');
+    Route::get('/registration-card/download', [App\Http\Controllers\Applicant\RegistrationCardController::class, 'download'])->name('registration-card.download');
+    Route::get('/registration-card/download-exam', [App\Http\Controllers\Applicant\RegistrationCardController::class, 'downloadExamCard'])->name('registration-card.download-exam');
+});
+
 // Super Admin routes
 Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'role:super_admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -74,6 +103,8 @@ Route::prefix('admin-sekolah')->name('admin-sekolah.')
         ->name('reports.index');
     Route::get('/reports/export-excel', [App\Http\Controllers\AdminSekolah\ReportController::class, 'exportExcel'])
         ->name('reports.export-excel');
+    Route::get('/reports/export-csv', [App\Http\Controllers\AdminSekolah\ReportController::class, 'exportCSV'])
+        ->name('reports.export-csv');
     Route::get('/reports/export-pdf', [App\Http\Controllers\AdminSekolah\ReportController::class, 'exportPDF'])
         ->name('reports.export-pdf');
 });
@@ -98,7 +129,17 @@ Route::prefix('verifikator')->name('verifikator.')
         ->name('verification.approve');
     Route::post('/verification/{applicant}/reject', [App\Http\Controllers\Verifikator\VerificationController::class, 'reject'])
         ->name('verification.reject');
-});    
+    
+    // QR Scan
+    Route::get('/scan', [App\Http\Controllers\Verifikator\VerificationController::class, 'scan'])
+        ->name('verification.scan');
+    Route::get('/verify/{token}', [App\Http\Controllers\Verifikator\VerificationController::class, 'verifyByToken'])
+        ->name('verification.by-token');
+});
+
+// Public Verification Route (from QR Code)
+Route::get('/verifikasi/{token}', [App\Http\Controllers\PublicVerificationController::class, 'redirect'])
+    ->name('public.verify');    
     Route::get('/viewer/dashboard', function () {
         return 'Viewer Dashboard - Coming Soon';
     });

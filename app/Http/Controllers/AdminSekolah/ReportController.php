@@ -44,4 +44,12 @@ class ReportController extends Controller
     {
         return $this->exportService->downloadPDF($request->all());
     }
+
+    /**
+     * Export report to CSV.
+     */
+    public function exportCSV(Request $request)
+    {
+        return $this->exportService->downloadCSV($request->all());
+    }
 }

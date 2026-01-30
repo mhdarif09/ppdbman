@@ -62,7 +62,7 @@
                                 <div class="text-xs text-gray-500">{{ $applicant->nisn }}</div>
                             </td>
                             <td>
-                                <span class="badge badge-info">{{ $applicant->pathway->name }}</span>
+                                <span class="badge badge-info">{{ $applicant->pathway->name ?? '-' }}</span>
                             </td>
                             <td class="text-sm text-gray-500">
                                 <!-- Placeholder for document count, implement later if needed -->

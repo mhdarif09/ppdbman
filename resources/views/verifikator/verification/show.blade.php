@@ -64,16 +64,160 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Dokumen Placeholder -->
-             <div class="card">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Dokumen Persyaratan</h3>
-                <div class="bg-blue-50 border border-blue-200 rounded p-4 text-center text-blue-800">
-                    <svg class="w-10 h-10 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <p class="text-sm">Belum ada dokumen yang diunggah secara digital.</p>
+
+            <!-- Data Pendidikan -->
+            <div class="card">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Data Pendidikan (Asal Sekolah)</h3>
+                
+                @if($applicant->education)
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-medium text-gray-500 uppercase">Nama Sekolah Asal</label>
+                        <div class="mt-1 text-base font-semibold text-gray-900">{{ $applicant->education->previous_school_name }}</div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 uppercase">Nomor STTB</label>
+                        <div class="mt-1 text-sm text-gray-900">{{ $applicant->education->sttb_number ?? '-' }}</div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 uppercase">Tanggal STTB</label>
+                        <div class="mt-1 text-sm text-gray-900">{{ $applicant->education->sttb_date ? $applicant->education->sttb_date->format('d F Y') : '-' }}</div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 uppercase">Lama Belajar</label>
+                        <div class="mt-1 text-sm text-gray-900">{{ $applicant->education->study_duration }} Tahun</div>
+                    </div>
+                    <div class="md:col-span-2">
+                         @if($applicant->education->is_transfer)
+                            <div class="bg-yellow-50 p-3 rounded border border-yellow-200 text-sm text-yellow-800">
+                                <strong>Status Pindahan:</strong> Ya, dari {{ $applicant->education->transfer_from_school }}<br>
+                                Alasan: {{ $applicant->education->transfer_reason }}
+                            </div>
+                         @else
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Siswa Baru (Bukan Pindahan)
+                            </span>
+                         @endif
+                    </div>
                 </div>
+                @else
+                    <p class="text-gray-500 italic">Data pendidikan belum diisi.</p>
+                @endif
+            </div>
+
+            <!-- Data Nilai Rapor -->
+            <div class="card">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Data Nilai Rapor</h3>
+                
+                @if($applicant->grades && $applicant->grades->count() > 0)
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nilai Rata-rata</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @foreach($applicant->grades->sortBy('semester') as $grade)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    Semester {{ $grade->semester }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ number_format($grade->grade, 2) }}
+                                </td>
+                            </tr>
+                            @endforeach
+                            <!-- Average Row -->
+                            <tr class="bg-gray-50 font-bold">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rata-rata Keseluruhan</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ number_format($applicant->grades->avg('grade'), 2) }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                @else
+                    <p class="text-gray-500 italic">Data nilai rapor belum diisi.</p>
+                @endif
+            </div>
+
+            <!-- Data Tambahan (Hobi & Perkembangan) -->
+             <div class="card">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Data Tambahan</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-medium text-gray-700 mb-2">Hobi & Kegemaran</h4>
+                        @if($applicant->hobby)
+                        <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                            <li>Kesenian: {{ $applicant->hobby->arts ?? '-' }}</li>
+                            <li>Olahraga: {{ $applicant->hobby->sports ?? '-' }}</li>
+                            <li>Organisasi: {{ $applicant->hobby->organization ?? '-' }}</li>
+                            <li>Lainnya: {{ $applicant->hobby->other ?? '-' }}</li>
+                        </ul>
+                        @else
+                            <p class="text-xs text-gray-400">Tidak ada data hobi.</p>
+                        @endif
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-gray-700 mb-2">Perkembangan Siswa</h4>
+                        @if($applicant->development)
+                        <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                            <li>Beasiswa: {{ $applicant->development->scholarships ?? '-' }}</li>
+                            <li>Prestasi: {{ $applicant->development->achievements ?? '-' }}</li>
+                            <li>Pernah Tinggal Kelas: {{ $applicant->development->leave_year ? 'Ya (' . $applicant->development->leave_year . ' tahun)' : 'Tidak' }}</li>
+                        </ul>
+                        @else
+                            <p class="text-xs text-gray-400">Tidak ada data perkembangan.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dokumen Persyaratan -->
+             <div class="card">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Dokumen Persyaratan (Checklist Siswa)</h3>
+                
+                @if($applicant->documents_checklist)
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @php
+                            $labels = [
+                                'printout' => 'Cetak Bukti Pendaftaran',
+                                'raport' => 'Fotokopi Nilai Rapor',
+                                'kk' => 'Fotokopi Kartu Keluarga',
+                                'akte' => 'Fotokopi Akte Kelahiran',
+                                'photos_2x3' => 'Pas Foto 2x3 (3 Lembar)',
+                                'photos_3x4' => 'Pas Foto 3x4 (3 Lembar)'
+                            ];
+                        @endphp
+                        
+                        @foreach($labels as $key => $label)
+                            <div class="flex items-center p-3 rounded border {{ isset($applicant->documents_checklist[$key]) ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200' }}">
+                                <div class="flex-shrink-0 mr-3">
+                                    @if(isset($applicant->documents_checklist[$key]))
+                                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    @else
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    @endif
+                                </div>
+                                <span class="text-sm font-medium {{ isset($applicant->documents_checklist[$key]) ? 'text-green-800' : 'text-gray-500' }}">
+                                    {{ $label }}
+                                </span>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="bg-yellow-50 border border-yellow-200 rounded p-4 text-center text-yellow-800">
+                        <p class="text-sm">Data checklist dokumen tidak ditemukan.</p>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -82,7 +226,7 @@
             <!-- Jalur Info -->
             <div class="bg-gray-800 text-white rounded-lg p-6 shadow-md">
                 <div class="text-xs text-gray-400 uppercase tracking-widest mb-1">Jalur Pendaftaran</div>
-                <div class="text-2xl font-bold">{{ $applicant->pathway->name }}</div>
+                <div class="text-2xl font-bold">{{ $applicant->pathway->name ?? 'Tidak ada jalur' }}</div>
                 <div class="mt-4 pt-4 border-t border-gray-700 flex justify-between">
                     <span class="text-gray-400">No. Reg</span>
                     <span class="font-mono font-medium">{{ $applicant->registration_number }}</span>
