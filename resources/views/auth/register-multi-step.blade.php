@@ -1,7 +1,7 @@
 
 @extends('layouts.guest')
 
-@section('title', 'Pendaftaran - PPDB MAN 1 Palembang')
+@section('title', 'Pendaftaran - PMB MAN 1 Palembang')
 
 @section('content')
 <div class="min-h-screen flex bg-white font-sans antialiased overflow-hidden">

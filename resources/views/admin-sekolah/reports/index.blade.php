@@ -16,7 +16,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Pathway -->
                     <div>
-                        <label class="form-label">Jalur PPDB</label>
+                        <label class="form-label">Jalur PMB</label>
                         <select name="pathway" class="form-input">
                             <option value="">Semua Jalur</option>
                             @foreach($pathways as $pathway)

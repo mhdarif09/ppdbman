@@ -22,7 +22,7 @@
             <div class="h-16 flex items-center justify-between px-6 border-b border-gray-200">
                 <div class="flex items-center space-x-3">
                     <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8 w-8">
-                    <span class="font-semibold text-gray-900">PPDB Admin</span>
+                    <span class="font-semibold text-gray-900">PMB Admin</span>
                 </div>
                 <button @click="sidebarOpen = false" class="lg:hidden text-gray-500">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

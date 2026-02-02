@@ -46,9 +46,13 @@ class ExportService
     /**
      * Download applicants data as Excel.
      */
+    /**
+     * Download applicants data as Excel.
+     */
     public function downloadExcel(array $filters)
     {
-        $query = $this->buildQuery($filters);
+        $query = $this->buildQuery($filters)
+            ->with(['parents', 'education', 'hobby', 'development', 'grades']);
         
         return Excel::download(new class($query) implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize {
             protected $query;
@@ -66,29 +70,141 @@ class ExportService
             public function headings(): array
             {
                 return [
+                    'No',
                     'No. Pendaftaran',
-                    'NISN',
-                    'Nama Lengkap',
-                    'Jalur PPDB',
                     'Status',
+                    'Jalur Masuk',
                     'Tanggal Daftar',
-                    'Total Skor',
+                    
+                    // Akun
+                    'Nama Lengkap',
+                    'NISN',
+                    'NIK',
+                    'Email',
+                    'No. HP',
+                    
+                    // Biodata
+                    'Tempat Lahir',
+                    'Tanggal Lahir',
+                    'Jenis Kelamin',
+                    'Agama',
+                    'Kewarganegaraan',
+                    'Anak Ke',
+                    'Jml Sdr Kandung',
+                    'Status Anak',
+                    'Alamat Lengkap',
+                    'No. WhatsApp',
+                    'Gol. Darah',
+                    'Penyakit',
+                    'Tinggi Badan',
+                    'Berat Badan',
+                    
+                    // Pendidikan (Asal Sekolah)
+                    'Asal Sekolah',
+                    'NPSN Sekolah',
+                    'Alamat Sekolah',
+                    'Tahun Lulus',
+                    'No. STTB/Ijazah',
+                    
+                    // Orang Tua (Ayah)
+                    'Nama Ayah',
+                    'NIK Ayah',
+                    'Pekerjaan Ayah',
+                    'Penghasilan Ayah',
+                    'No. HP Ayah',
+                    
+                    // Orang Tua (Ibu)
+                    'Nama Ibu',
+                    'NIK Ibu',
+                    'Pekerjaan Ibu',
+                    'Penghasilan Ibu',
+                    'No. HP Ibu',
+                    
+                    // Wali
+                    'Nama Wali',
+                    'Pekerjaan Wali',
+                    'No. HP Wali',
+                    
+                    // Nilai/Hobi
+                    'Hobi Seni',
+                    'Hobi Olahraga',
+                    'Organisasi',
+                    'Prestasi/Beasiswa',
                 ];
             }
 
             public function map($applicant): array
             {
+                // Helpers
+                $parents = $applicant->parents;
+                $edu = $applicant->education;
+                $hobby = $applicant->hobby;
+                $dev = $applicant->development;
+
                 return [
+                    $applicant->id,
                     $applicant->registration_number,
-                    $applicant->nisn,
-                    $applicant->full_name,
-                    $applicant->pathway->name ?? '-',
                     ucfirst($applicant->status),
-                    $applicant->created_at->format('Y-m-d H:i:s'),
-                    $applicant->total_score ?? '0',
+                    $applicant->pathway->name ?? '-',
+                    $applicant->created_at->format('d-m-Y H:i'),
+                    
+                    // Akun
+                    $applicant->full_name,
+                    $applicant->nisn,
+                    $applicant->nik,
+                    $applicant->user->email ?? '-',
+                    $applicant->phone,
+                    
+                    // Biodata
+                    $applicant->birth_place,
+                    $applicant->birth_date ? $applicant->birth_date->format('d-m-Y') : '-',
+                    $applicant->gender == 'L' ? 'Laki-laki' : 'Perempuan',
+                    $applicant->religion,
+                    $applicant->nationality,
+                    $applicant->child_order,
+                    $applicant->siblings_count,
+                    $applicant->child_status,
+                    $applicant->address,
+                    $applicant->whatsapp_number ?? $applicant->phone,
+                    $applicant->blood_type,
+                    $applicant->diseases ? implode(', ', $applicant->diseases) : '-',
+                    $applicant->height,
+                    $applicant->weight,
+                    
+                    // Pendidikan
+                    $edu?->school_name,
+                    $edu?->school_npsn,
+                    $edu?->school_address,
+                    $dev?->graduation_year,
+                    $edu?->sttb_number,
+                    
+                    // Ayah
+                    $parents?->father_name,
+                    $parents?->father_nik,
+                    $parents?->father_job,
+                    $parents?->father_income,
+                    $parents?->father_phone,
+                    
+                    // Ibu
+                    $parents?->mother_name,
+                    $parents?->mother_nik,
+                    $parents?->mother_job,
+                    $parents?->mother_income,
+                    $parents?->mother_phone,
+                    
+                    // Wali
+                    $parents?->guardian_name,
+                    $parents?->guardian_job,
+                    $parents?->guardian_phone,
+                    
+                    // Hobi/Lainnya
+                    $hobby?->arts,
+                    $hobby?->sports,
+                    $hobby?->organization,
+                    $dev?->scholarships,
                 ];
             }
-        }, 'laporan_ppdb_' . date('Y-m-d_H-i') . '.xlsx');
+        }, 'Laporan_Lengkap_PMB_' . date('Y-m-d_H-i') . '.xlsx');
     }
 
     /**

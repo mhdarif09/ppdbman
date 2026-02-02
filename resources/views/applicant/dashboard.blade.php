@@ -1,7 +1,7 @@
 
 @extends('layouts.guest')
 
-@section('title', 'Dashboard Pendaftar - PPDB MAN 1 Palembang')
+@section('title', 'Dashboard Pendaftar - PMB MAN 1 Palembang')
 
 @section('content')
 <div class="min-h-screen bg-[#f8fafc] font-sans antialiased text-gray-900" x-data="{ mobileMenuOpen: false }">
@@ -50,7 +50,7 @@
         <!-- Dashboard Header -->
         <div class="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div class="space-y-1">
-                <span class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-black uppercase tracking-widest border border-green-200">PPDB TA 2026/2027</span>
+                <span class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-black uppercase tracking-widest border border-green-200">PMB TA 2026/2027</span>
                 <h2 class="text-3xl font-black text-gray-900 tracking-tight">Selamat Datang, <span class="text-green-600 italic">{{ explode(' ', Auth::user()->name)[0] }}</span>!</h2>
                 <p class="text-gray-500 font-medium">Pantau status pendaftaran dan lengkapi data Anda di sini.</p>
             </div>
@@ -217,7 +217,7 @@
                         <h4 class="text-lg font-black mb-4 uppercase leading-tight">Butuh Bantuan Teknis?</h4>
                         <p class="text-gray-400 text-sm font-medium mb-6">Tim IT kami siap membantu jika Anda mengalami kendala saat pengisian data.</p>
                         <a href="#" class="inline-flex items-center gap-2 text-green-400 font-black text-xs uppercase tracking-widest hover:text-green-300 transition">
-                            Chat Admin PPDB 
+                            Chat Admin PMB 
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                         </a>
                     </div>
@@ -328,7 +328,7 @@
                                             </div>
                                             <div>
                                                 <p class="text-sm font-black text-green-700 leading-tight">SUDAH DIVERIFIKASI</p>
-                                                <p class="text-[10px] font-bold text-gray-400 uppercase mt-1 tracking-tighter">Oleh: {{ $applicant->verifier->name ?? 'Panitia PPDB' }}</p>
+                                                <p class="text-[10px] font-bold text-gray-400 uppercase mt-1 tracking-tighter">Oleh: {{ $applicant->verifier->name ?? 'Panitia PMB' }}</p>
                                             </div>
                                         </div>
                                     @elseif($applicant->status == 'rejected')

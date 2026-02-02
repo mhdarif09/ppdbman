@@ -52,6 +52,8 @@ class Applicant extends Model
         'physical_defects',
         'height',
         'weight',
+        'psikis',
+        'intellectual',
         'biodata_completed_at',
         'registration_step',
         'registration_completed_at',
@@ -238,5 +240,10 @@ class Applicant extends Model
     public function grades()
     {
         return $this->hasMany(ApplicantGrade::class);
+    }
+    
+    public function competitions()
+    {
+        return $this->hasMany(ApplicantCompetition::class);
     }
 }

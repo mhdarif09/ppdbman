@@ -43,13 +43,11 @@
             $currentStep = $step ?? 1;
             $maxStep = $applicant->registration_step ?? 1;
             $stepData = [
-                1 => ['title' => 'Identitas Diri', 'desc' => 'Data pribadi siswa'],
-                2 => ['title' => 'Sekolah Asal', 'desc' => 'Riwayat pendidikan'],
+                1 => ['title' => 'Identitas Diri', 'desc' => 'Data pribadi, psikis & intellectual'],
+                2 => ['title' => 'Riwayat Pendidikan', 'desc' => 'Nilai rapor & prestasi lomba'],
                 3 => ['title' => 'Data Orang Tua', 'desc' => 'Informasi keluarga'],
                 4 => ['title' => 'Minat & Bakat', 'desc' => 'Hobi dan potensi'],
-                5 => ['title' => 'Riwayat Pendidikan', 'desc' => 'Prestasi akademik'],
-                6 => ['title' => 'Nilai Rapor', 'desc' => 'Nilai semester 1-5'],
-                7 => ['title' => 'Finalisasi', 'desc' => 'Konfirmasi & submit']
+                5 => ['title' => 'Finalisasi', 'desc' => 'Checklist dokumen & submit']
             ];
         @endphp
 
@@ -58,15 +56,15 @@
             <div class="flex items-center justify-between mb-4">
                 <div>
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">
-                        Langkah {{ $currentStep }} dari 7
+                        Langkah {{ $currentStep }} dari 5
                     </span>
                 </div>
-                <span class="text-sm font-medium text-slate-500">{{ round(($currentStep/7)*100) }}% selesai</span>
+                <span class="text-sm font-medium text-slate-500">{{ round(($currentStep/5)*100) }}% selesai</span>
             </div>
             
             <!-- Progress Steps -->
             <div class="flex gap-2">
-                @for($i = 1; $i <= 7; $i++)
+                @for($i = 1; $i <= 5; $i++)
                     <div class="flex-1 h-2 rounded-full transition-all duration-500 {{ $i <= $currentStep ? 'bg-emerald-500' : 'bg-slate-200' }}"></div>
                 @endfor
             </div>

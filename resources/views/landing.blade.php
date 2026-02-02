@@ -1,7 +1,7 @@
 
 @extends('layouts.guest')
 
-@section('title', 'Beranda - PPDB Online MAN 1 Palembang')
+@section('title', 'Beranda - PMB Online MAN 1 Palembang')
 
 @section('content')
 <div class="font-sans antialiased text-gray-900 bg-white" x-data="{ scrolled: false, mobileMenuOpen: false }" @scroll.window="scrolled = (window.pageYOffset > 20)">
@@ -354,45 +354,7 @@
         </div>
     </section>
 
-    <!-- Fasilitas Section -->
-    <section id="fasilitas" class="py-24 bg-white relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-             <div class="text-center mb-16 space-y-4">
-                <span class="text-green-700 font-black tracking-widest uppercase text-xs">Facilities Gallery</span>
-                <h2 class="text-4xl md:text-5xl font-black text-gray-900 uppercase">Fasilitas Unggulan</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[250px]">
-                <div class="md:col-span-2 md:row-span-2 relative overflow-hidden rounded-[2.5rem] shadow-xl group">
-                    <img src="{{ asset('images/multimedia_lab.png') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end p-8">
-                        <div>
-                            <h4 class="text-white text-2xl font-black">Multimedia Laboratory</h4>
-                            <p class="text-white/70 text-sm">Dilengkapi PC Core i7 & Internet High Speed</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="relative overflow-hidden rounded-[2rem] shadow-xl group">
-                    <img src="{{ asset('images/digital_library.png') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-500">
-                        <span class="text-white font-bold text-center p-4">Perpustakaan Digital</span>
-                    </div>
-                </div>
-                <div class="relative overflow-hidden rounded-[2rem] shadow-xl group">
-                    <img src="{{ asset('images/science_lab.png') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-500">
-                        <span class="text-white font-bold text-center p-4">Laboratorium Sains</span>
-                    </div>
-                </div>
-                <div class="md:col-span-2 relative overflow-hidden rounded-[2rem] shadow-xl group">
-                    <img src="{{ asset('images/sports_center.png') }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-r from-green-900/80 to-transparent flex items-center p-8">
-                         <h4 class="text-white text-xl font-black">Sports Center <br>& Hall</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+
 
     <!-- FAQ Section -->
     <section id="faq" class="py-24 bg-gray-50">
@@ -421,7 +383,7 @@
                         <svg class="w-6 h-6 transition transform" :class="active == 2 ? 'rotate-180 text-green-700' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
                     <div x-show="active == 2" class="px-8 pb-8 text-gray-600 font-medium leading-relaxed" x-collapse>
-                        Proses pendaftaran awal di sistem PPDB online MAN 1 Palembang adalah gratis (tidak dipungut biaya). Biaya operasional seleksi mungkin berlaku tergantung kebijakan madrasah.
+                        Proses pendaftaran awal di sistem PMB online MAN 1 Palembang adalah gratis (tidak dipungut biaya). Biaya operasional seleksi mungkin berlaku tergantung kebijakan madrasah.
                     </div>
                 </div>
 

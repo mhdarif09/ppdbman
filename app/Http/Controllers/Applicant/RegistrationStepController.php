@@ -9,6 +9,7 @@ use App\Models\ApplicantParent;
 use App\Models\ApplicantHobby;
 use App\Models\ApplicantDevelopment;
 use App\Models\ApplicantGrade;
+use App\Models\ApplicantCompetition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +38,7 @@ class RegistrationStepController extends Controller
         }
         
         $step = (int) $step;
-        if ($step < 1 || $step > 7) {
+        if ($step < 1 || $step > 5) {
             return redirect()->route('applicant.registration.step', 1);
         }
         
@@ -81,24 +82,18 @@ class RegistrationStepController extends Controller
                 break;
             case 5:
                 $this->saveStep5($request, $applicant);
-                break;
-            case 6:
-                $this->saveStep6($request, $applicant);
-                break;
-            case 7:
-                $this->saveStep7($request, $applicant);
                 return $this->submit($request);
         }
         
         // Update registration step
-        if ($step < 7) {
+        if ($step < 5) {
             $applicant->update(['registration_step' => $step + 1]);
             return redirect()->route('applicant.registration.step', $step + 1)
                 ->with('success', 'Data berhasil disimpan!');
         }
         
-        // If step 7, show final submit button
-        return redirect()->route('applicant.registration.step', 7)
+        // If step 5, submit
+        return redirect()->route('applicant.registration.step', 5)
             ->with('success', 'Data berhasil disimpan! Silakan submit pendaftaran.');
     }
     
@@ -165,6 +160,10 @@ class RegistrationStepController extends Controller
             'physical_defects' => 'nullable|string',
             'height' => 'required|integer|min:50|max:250',
             'weight' => 'required|integer|min:10|max:200',
+            
+            // Psikis & Intellectual
+            'psikis' => 'nullable|string',
+            'intellectual' => 'nullable|string',
         ]);
         
         $validated['biodata_completed_at'] = now();
@@ -172,10 +171,11 @@ class RegistrationStepController extends Controller
         $applicant->update($validated);
     }
     
-    // Step 2: Education
+    // Step 2: Education + Grades + Competitions (Merged)
     private function saveStep2($request, $applicant)
     {
-        $validated = $request->validate([
+        // Education
+        $educationValidated = $request->validate([
             'previous_school_name' => 'required|string',
             'school_address' => 'nullable|string',
             'school_type' => 'nullable|in:negeri,swasta',
@@ -189,29 +189,56 @@ class RegistrationStepController extends Controller
             'transfer_date' => 'nullable|date',
             'transfer_program' => 'nullable|string',
             'transfer_reason' => 'nullable|string',
+            'transfer_from_grade' => 'nullable|string',
         ]);
         
         $applicant->education()->updateOrCreate(
             ['applicant_id' => $applicant->id],
-            [
-                'previous_school_name' => $request->previous_school_name,
-                'school_address' => $request->school_address,
-                'school_type' => $request->school_type,
-                'school_npsn' => $request->school_npsn,
-                'sttb_number' => $request->sttb_number,
-                'sttb_date' => $request->sttb_date,
-                'study_duration' => $request->study_duration,
-                'is_transfer' => $request->is_transfer,
-                'transfer_from_school' => $request->transfer_from_school,
-                'transfer_class' => $request->transfer_class,
-                'transfer_date' => $request->transfer_date,
-                'transfer_program' => $request->transfer_program,
-                'transfer_reason' => $request->transfer_reason,
-            ]
+            $educationValidated
         );
+        
+        // Grades
+        $gradesValidated = $request->validate([
+            'grades' => 'required|array',
+        ]);
+        
+        // Delete existing grades and recreate
+        $applicant->grades()->delete();
+        
+        foreach ($gradesValidated['grades'] as $subject => $semesters) {
+            foreach ($semesters as $semester => $score) {
+                if ($score !== null && $score !== '') {
+                    $applicant->grades()->create([
+                        'subject' => $subject,
+                        'semester' => $semester,
+                        'grade' => $score,
+                    ]);
+                }
+            }
+        }
+        
+        // Competitions
+        $competitionsValidated = $request->validate([
+            'competitions' => 'nullable|array',
+            'competitions.*.competition_name' => 'required|string',
+            'competitions.*.year' => 'required|integer|min:2010|max:' . (date('Y') + 1),
+            'competitions.*.level' => 'required|in:kecamatan,kota,provinsi,nasional',
+        ]);
+        
+        // Delete existing competitions and recreate
+        $applicant->competitions()->delete();
+        
+        if (!empty($competitionsValidated['competitions'])) {
+            foreach ($competitionsValidated['competitions'] as $comp) {
+                if (!empty($comp['competition_name'])) {
+                    $applicant->competitions()->create($comp);
+                }
+            }
+        }
     }
     
-    // Step 3: Parents
+    
+    // Step 3: Parents (Data Orang Tua)
     private function saveStep3($request, $applicant)
     {
         $validated = $request->validate([
@@ -264,7 +291,7 @@ class RegistrationStepController extends Controller
         );
     }
     
-    // Step 4: Hobbies
+    // Step 4: Hobbies (Minat & Bakat)
     private function saveStep4($request, $applicant)
     {
         $validated = $request->validate([
@@ -280,66 +307,32 @@ class RegistrationStepController extends Controller
         );
     }
     
-    // Step 5: Development
+    
+    // Step 5: Documents Checklist & Final Submission
     private function saveStep5($request, $applicant)
     {
-        $validated = $request->validate([
-            'enrollment_year' => 'required|integer',
-            'scholarships' => 'nullable|string',
-            'leave_year' => 'nullable|integer',
-            'leave_reason' => 'nullable|string',
-            'graduation_year' => 'nullable|integer',
-            'graduation_sttb_date' => 'nullable|date',
-            'graduation_sttb_number' => 'nullable|string',
-            'after_graduation_status' => 'nullable|in:melanjutkan,bekerja,lainnya',
-            'continued_to' => 'nullable|string',
-            'working_at' => 'nullable|string',
-        ]);
-        
-        $applicant->development()->updateOrCreate(
-            ['applicant_id' => $applicant->id],
-            $validated
-        );
-    }
-    
-    // Step 6: Grades
-    // Step 6: Grades (Simplified)
-    private function saveStep6($request, $applicant)
-    {
-        $validated = $request->validate([
-            'grades' => 'required|array',
-        ]);
-        
-        // Delete existing grades
-        $applicant->grades()->delete();
-        
-        foreach ($validated['grades'] as $subject => $semesters) {
-            foreach ($semesters as $semester => $score) {
-                if ($score !== null && $score !== '') {
-                    $applicant->grades()->create([
-                        'subject' => $subject,
-                        'semester' => $semester,
-                        'grade' => $score,
-                    ]);
-                }
-            }
-        }
-    }
+        $isPmpa = \Illuminate\Support\Str::contains(strtoupper($applicant->pathway->name ?? ''), 'PMPA');
 
-    // Step 7: Documents Checklist
-    private function saveStep7($request, $applicant)
-    {
-        $validated = $request->validate([
-            'checklist' => 'required|array',
-            'checklist.raport' => 'required|accepted',
-            'checklist.kk' => 'required|accepted',
-            'checklist.akte' => 'required|accepted',
-            'checklist.photos_2x3' => 'required|accepted',
-            'checklist.photos_3x4' => 'required|accepted',
-        ]);
+        $rules = [
+            'checklist_kk' => 'required|accepted',
+            'checklist_akte' => 'required|accepted',
+            'checklist_photo_3x4' => 'required|accepted',
+            'checklist_photo_2x3' => 'required|accepted',
+            'checklist_printout' => 'required|accepted',
+            'checklist_sertifikat' => 'nullable|accepted',
+            'checklist_raport' => 'required|accepted',
+        ];
+
+        if ($isPmpa) {
+            $rules['checklist_rekomendasi'] = 'required|accepted';
+        } else {
+            $rules['checklist_rekomendasi'] = 'nullable';
+        }
+
+        $validated = $request->validate($rules);
         
         $applicant->update([
-            'documents_checklist' => $validated['checklist']
+            'documents_checklist' => $validated
         ]);
     }
     
@@ -350,19 +343,18 @@ class RegistrationStepController extends Controller
     {
         switch ($step) {
             case 1:
-                return $applicant; // Biodata
+                return $applicant; // Biodata with psikis & intellectual
             case 2:
-                return $applicant->education;
+                $education = $applicant->education;
+                $existingGrades = $applicant->grades;
+                $competitions = $applicant->competitions;
+                return compact('education', 'existingGrades', 'competitions');
             case 3:
-                return $applicant->parents;
+                return $applicant->parents; // Parents (Data Orang Tua)
             case 4:
-                return $applicant->hobby;
+                return $applicant->hobby; // Hobbies (Minat & Bakat)
             case 5:
-                return $applicant->development;
-            case 6:
-                return $applicant->grades;
-            case 7:
-                return $applicant->documents_checklist;
+                return $applicant->documents_checklist; // Finalization
             default:
                 return null;
         }

@@ -85,13 +85,13 @@
         /* Title Box */
         .title-box {
             text-align: center;
-            background: #d1fae5; /* Light Green */
-            color: #000;
+            background: #007523ff; /* Light Green */
+            color: #FFFF;
             font-weight: bold;
             font-size: 11pt;
             padding: 8px;
             margin-bottom: 5px;
-            border: 1px solid #10b981; /* Green Border */
+            border: 1px solid #007523ff; /* Green Border */
         }
         
         .subtitle {
@@ -122,14 +122,14 @@
         
         /* Data Tables */
         .section-header {
-            background: #d1fae5; /* Light Green */
-            color: #000;
+            background: #007523ff; /* Light Green */
+            color: #FFF;
             padding: 3px 10px;
             font-size: 9pt;
             font-weight: bold;
             margin-bottom: 5px;
             text-align: center;
-            border: 1px solid #10b981; /* Green Border */
+            border: 1px solid #007523ff; /* Green Border */
         }
         
         table.data-table {
@@ -159,7 +159,8 @@
         }
         
         table.grades-table th {
-            background-color: #d1fae5;
+            background-color: #007523ff;
+            color: #ffffff;
             font-weight: bold;
         }
         
@@ -177,7 +178,8 @@
         }
         
         table.checklist-table th {
-            background-color: #d1fae5;
+            background-color: #007523ff;
+            color: #ffffff;
             text-align: center;
             font-weight: bold;
         }
@@ -198,8 +200,9 @@
         .notes-box {
             margin-top: 20px;
             padding: 10px;
-            border: 1px solid #000;
-            background-color: #f0fdf4;
+            border: 1px solid #ffff;
+            background-color: #007523ff;
+            color: #ffffff;
             font-size: 8pt;
             font-style: italic;
             clear: both;
@@ -230,7 +233,7 @@
             return 'data:image/'.$ext.';base64,'.base64_encode(file_get_contents($full));
         }
         $logoMan = getBase64('images/logo.png');
-        $logoKemenag = getBase64('images/logokemenag.jpg');
+        $logoKemenag = getBase64('images/logo-kemenag.png');
         $photo = '';
         if ($applicant->photo && file_exists(public_path('storage/'.$applicant->photo))) {
             $photo = getBase64('storage/'.$applicant->photo);
@@ -258,7 +261,7 @@
             </table>
         </div>
 
-        <div class="title-box">
+        <div class="title-box" >
             PANITIA PENERIMAAN MURID BARU (PMB) JALUR {{ strtoupper($applicant->pathway->name ?? 'REGULER') }}<br>
             TAHUN PELAJARAN {{ $applicant->academic_year }}
         </div>
@@ -420,20 +423,23 @@
             </thead>
             <tbody>
                 @php 
+                    $isPmpa = \Illuminate\Support\Str::contains(strtoupper($applicant->pathway->name ?? ''), 'PMPA');
                     $docs = [
-                        'Cetak Kartu Bukti Daftar (2 Rangkap)',
-                        'Fotokopi Kartu Keluarga (1 lembar)',
-                        'Pas Foto 3x4 (3 lembar)',
-                        'Pas Foto 2x3 (3 lembar)',
-                        'Rapor Semester 1-5 Dilegalisir',
+                        'Printout Kartu Bukti Pendaftaran (2 Lembar)',
+                        'Fotokopi Kartu Keluarga (1 Lembar)',
+                        'Fotokopi Akte Kelahiran (1 Lembar)',
+                        'Pas Foto 3x4 Latar Belakang Merah (3 Lembar)',
+                        'Pas Foto 2x3 Latar Belakang Merah (3 Lembar)',
                     ];
                     
-                    if (str_contains(strtoupper($applicant->pathway->name ?? ''), 'TAHFIDZ')) {
-                        $docs[] = 'Sertifikat Hafalan / Bukti Hafalan';
+                    if ($isPmpa) {
+                        $docs[] = 'Fotokopi Raport Semester 1-6 Dilegalisir';
+                        $docs[] = 'Surat Rekomendasi dari Sekolah Asal';
+                    } else {
+                        $docs[] = 'Fotokopi Raport Semester 3-5 Dilegalisir';
                     }
                     
-                    $docs[] = 'Dokumen Pendukung Lainnya';
-
+                    $docs[] = 'Sertifikat Tahfidz/Prestasi/Pendukung (Opsional)';
                 @endphp
                 @foreach($docs as $i => $d)
                 <tr>

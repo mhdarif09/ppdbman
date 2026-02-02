@@ -191,6 +191,28 @@
         </div>
     </div>
 
+    <!-- Section 4: Psikis & Intellectual -->
+    <div class="mb-10">
+        <div class="section-header">
+            <div class="section-number">4</div>
+            <h3 class="section-title">Profil Psikis & Intellectual</h3>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="form-group">
+                <label class="input-label">Psikis (Kondisi Psikologis)</label>
+                <textarea name="psikis" rows="4" placeholder="Ceritakan kondisi psikologis Anda, misalnya: kepribadian, kelebihan, kelemahan, dll...">{{ old('psikis', $applicant->psikis) }}</textarea>
+                <p class="text-xs text-slate-500 mt-1">Tuliskan kondisi psikologis atau karakter diri Anda dengan jujur</p>
+            </div>
+            
+            <div class="form-group">
+                <label class="input-label">Intellectual (Kemampuan Intelektual)</label>
+                <textarea name="intellectual" rows="4" placeholder="Ceritakan kemampuan intelektual Anda, misalnya: minat akademik, bakat khusus, prestasi intelektual, dll...">{{ old('intellectual', $applicant->intellectual) }}</textarea>
+                <p class="text-xs text-slate-500 mt-1">Tuliskan kemampuan intelektual dan minat belajar Anda</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <div class="form-navigation">
         <div></div>
